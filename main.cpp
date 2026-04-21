@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <chrono>
 #include "bst.h"
 #include "TwoThreeTree.h"
 
@@ -97,7 +98,42 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	else if (treeChoice == 'c') {
-		std::cout << "Compare mode not implemented yet. \n";
+        std::ifstream bstInput(inputFileName.c_str());
+        std::ifstream ttInput(inputFileName.c_str());
+        BST bstTree;
+        TwoThreeTree ttTree;
+        int choice = 0;
+
+        if (!bstInput.is_open()) {
+            std::cout << "Invalid File Name. Restart Program.\n";
+            return 2;
+        }
+
+        bstTree.buildTree(bstInput);
+        ttTree.buildTree(ttInput);
+        ttInput.close();
+        bstInput.close();
+
+		auto wordsSet = bstTree.dumpTree();
+
+		auto bstStart = std::chrono::high_resolution_clock::now();
+		for(string word : wordsSet){
+			bstTree.contains(word);
+		}
+		auto bstEnd = std::chrono::high_resolution_clock::now();
+
+		auto ttStart = std::chrono::high_resolution_clock::now();
+		for(string word : wordsSet){
+			ttTree.contains(word);
+		}
+		auto ttEnd = std::chrono::high_resolution_clock::now();
+
+		auto bstDuration = bstEnd-bstStart;
+		auto ttDuration = ttEnd-ttStart;
+
+		std::cout << "BST Time to search each item in the table: " << bstDuration.count() << std::endl;
+		std::cout << "Two-Three Time to search each item in the table: " << ttDuration.count() << std::endl;
+
 	}
 	else {
 		std::cout << "Invalid option.\n";

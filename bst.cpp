@@ -32,6 +32,11 @@ void BST::contains() const{
 	    cout << '\"' << input <<"\" is not in the document\n";
 }
 
+void BST::contains(string input) const {
+    node *foundNode = NULL;
+    containsHelper(input, root, foundNode);
+}
+
 //Prints the index to the supplied receiver, either
 //cout or the output file
 void BST::printTree(ostream & out) const {
@@ -150,6 +155,8 @@ void BST::printTreeHelper(node *t, ostream & out) const{
 	}
 }
 
+
+
 //Returns height of tree. If tree has only one node, height is 1    
 int BST::findHeight(node *t){
     if(t == NULL)
@@ -161,4 +168,19 @@ int BST::findHeight(node *t){
 	else 
 	    return(rightHeight+1);
     }
+}
+
+std::set<string> BST::dumpTree() {
+    std::set<string> out;
+    dumpTreeHelper(root, out);
+    return out;
+}
+
+void BST::dumpTreeHelper(BST::node *t, std::set<string> &out) {
+    if(t == NULL)
+        return;
+
+    dumpTreeHelper(t->left, out);
+    out.insert(t->key);
+    dumpTreeHelper(t->right, out);
 }

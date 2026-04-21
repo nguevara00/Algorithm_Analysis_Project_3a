@@ -42,6 +42,21 @@ void TwoThreeTree::contains() const{
 	}
 }
 
+void TwoThreeTree::contains(std::string input) const {
+	node* foundNode = nullptr;
+
+	if(containsHelper(input, root, foundNode)){
+		const Key* foundKey = nullptr;
+
+		if (foundNode->first.word == input) {
+			foundKey = &(foundNode->first);
+		}
+		else {
+			foundKey = &(foundNode->second);
+		}
+	}
+}
+
 //Returns true if there are no nodes in the tree
 bool TwoThreeTree::isEmpty() const {
     return root == nullptr;
@@ -433,3 +448,4 @@ int TwoThreeTree::findHeight(node *t) const{
 bool TwoThreeTree::isLeaf(node* t) const {
 	return t != nullptr && t->left == nullptr && t->middle == nullptr && t->right == nullptr;
 }
+

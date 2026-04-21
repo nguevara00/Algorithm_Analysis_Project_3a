@@ -15,6 +15,7 @@ class TwoThreeTree{
         TwoThreeTree();
 
         void contains() const;
+		void contains(std::string input) const;
         bool isEmpty() const;
         void printTree(std::ostream & out = std::cout) const;
         void buildTree(std::ifstream & input);
