@@ -43,7 +43,7 @@ class TwoThreeTree{
 	    node* right;
 
 		//constructor for node with 1 key (all new nodes start with one key)
-		node(const Key& k) : first(k), keyCount(1), left(NULL), middle(NULL), right(NULL) {}
+		node(const Key& k) : first(k), keyCount(1), left(nullptr), middle(nullptr), right(nullptr) {}
 	};
 
 	node* root;
@@ -54,7 +54,7 @@ class TwoThreeTree{
 		Key promotedKey; // the key you want to push up
 		node* rightChild; // new right subtree from split
 
-		InsertResult(bool s = false) : split(s), rightChild(NULL) {}
+		InsertResult(bool s = false) : split(s), rightChild(nullptr) {}
 	};
 
 	InsertResult insertHelper(const std::string& word, int line, node*& t);
