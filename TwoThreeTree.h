@@ -14,6 +14,9 @@ class TwoThreeTree{
 		//constructor 
         TwoThreeTree();
 
+		//destructor
+		~TwoThreeTree();
+
         void contains() const;
 		void contains(std::string input) const;
         bool isEmpty() const;
@@ -57,6 +60,7 @@ class TwoThreeTree{
 		InsertResult(bool s = false) : split(s), rightChild(nullptr) {}
 	};
 
+	void destroy(node* t);
 	InsertResult insertHelper(const std::string& word, int line, node*& t);
 	bool containsHelper(const std::string& word, node* t, node*& result) const;
 	void printTreeHelper(node* t, std::ostream& out) const;
