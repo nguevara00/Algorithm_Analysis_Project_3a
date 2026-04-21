@@ -11,6 +11,11 @@ TwoThreeTree::TwoThreeTree(){
     root = nullptr;
 }
 
+//destructor
+TwoThreeTree::~TwoThreeTree(){
+	destroy(root);
+}
+
 //Used to implement the search function in main
 void TwoThreeTree::contains() const{
    std::string input;
@@ -139,6 +144,17 @@ void TwoThreeTree::buildTree(std::ifstream & input){
 
 	std::cout << std::setw(40) << std::left;
 	std::cout <<"Height of 2-3 Tree is : " << treeHeight << std::endl;
+}
+
+void TwoThreeTree::destroy(node* t) {
+	if (t == nullptr){
+		return;
+	}
+
+	destroy(t->left);
+	destroy(t->middle);
+	destory(t->right);
+	delete t;
 }
 
 //x is the word to insert, line is the line in the text file
