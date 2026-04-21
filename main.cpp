@@ -4,54 +4,103 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "bst.h"
-using namespace std;
+#include "TwoThreeTree.h"
 
 int main(int argc, char* argv[]) {
-	int choice;
 	if (argc != 2) {
 	    cout << "Incorrect input. Correct format: ./<exectuable.out> <inputtext.txt>\n";
 	    return 1;
 	}
+	string inputFileName = argv[1];
+	char treeChoice;
 
-	ifstream input(argv[1]);
-	BST myTree;
+	std::cout << "Options: (a) BST, (b) 2-3 Tree, (c) Compare BST and 2-3 Tree\n";
+	std::cin >> treeChoice;
 
-	if(input.is_open()){
-            myTree.buildTree(input);
-            input.close();
-            while(1){
-	        choice = 0;
-	        cout <<"Options: (1) display index, (2) search, (3) save index, (4) quit\n";
-	        cin >> choice;
+	if (treeChoice == 'a') {
+		std::ifstream input(inputFileName.c_str());
+		BST myTree;
+		int choice = 0;
 
-		//Print index
-	        if(choice == 1)
-	            myTree.printTree(cout);
-	       
-		//Search index for a word
-		else if(choice == 2)
-	            myTree.contains();
+		if (!input.is_open()) {
+			std::cout << "Invalid File Name. Restart Program.\n";
+			return 2;
+		}
 
-		//Save index
-	        else if(choice == 3){
-		    string outputFile;
-	            cout << "Enter a filename to save your index to (Suggested: <filename>.txt) : ";
-		    cin >> outputFile;
-		    ofstream output(outputFile.c_str());
-	            myTree.printTree(output);
-	            output.close();
-		    cout << "Saved\n";
-	        }
+		myTree.buildTree(input);
+		input.close();
 
-		//Quit	
-	        else
-		    break;
-            }
-        }
-	else{
-	    cout << "Invalid File Name. Restart Program.\n";
-	    return 2;
-        }
+		while (1) {
+			choice = 0;
+			std::cout << "Options: (1) display index, (2) search, (3) save index, (4) quit\n";
+			std::cin >> choice;
+
+			if (choice == 1) {
+				myTree.printTree(cout);
+			}
+
+			else if (choice == 2) {
+				myTree.contains();
+			}
+			else if (choice == 3) {
+				string outputFile;
+				std::cout << "Enter a filename to save your index to : ";
+				std::cin >> outputFile;
+				std::ofstream output(outputFile.c_str());
+				output.close();
+				std::cout << "Saved\n";
+			}
+			else {
+				break;
+			}
+		}
+	}
+	else if (treeChoice == 'b') {
+		std::ifstream input(inputFileName.c_str());
+		TwoThreeTree myTree;
+		int choice = 0;
+
+		if (!input.is_open()) {
+			std::cout << "Invalid File Name. Restart Program.\n";
+		}
+
+		myTree.buildTree(input);
+		input.close();
+
+		while (1){
+			choice = 0;
+			std::cout << "Options: (1) display index, (2) search, (3) save index, (4) quit\n";
+			std::cin >> choice;
+
+			if (choice == 1) {
+				myTree.printTree(cout);
+			}
+
+			else if (choice == 2) {
+				myTree.contains();
+			}
+
+			else if (choice == 3) {
+				string outputFile;
+				std::cout << "Enter a filename to save your index to : ";
+				std::cin >> outputFile;
+				std::ofstream output(outputFile.c_str());
+				myTree.printTree(output);
+				output.close();
+				std::cout << "Saved\n";
+			}
+			else {
+				break;
+			}
+		}
+	}
+	else if (treeChoice == 'c') {
+		std::cout << "Compare mode not implemented yet. \n";
+	}
+	else {
+		std::cout << "Invalid option.\n";
+	}
 	return 0;
 }
