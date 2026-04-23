@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <iomanip>
 #include "bst.h"
 #include "TwoThreeTree.h"
 
@@ -79,7 +80,7 @@ int main(int argc, char* argv[]) {
 		myTree.buildTree(input);
 		input.close();
 
-		while (1){
+		while(true){
 			choice = 0;
 			std::cout << "Options: (1) display index, (2) search, (3) save index, (4) quit\n";
 			std::cin >> choice;
@@ -121,8 +122,9 @@ int main(int argc, char* argv[]) {
             std::cout << "Invalid File Name. Restart Program.\n";
             return 2;
         }
-
+		std::cout << "BST Tree: \n";
         bstTree.buildTree(bstInput);
+		std::cout << "BST Tree: \n";
         ttTree.buildTree(ttInput);
         bstInput.close();
 		ttInput.close();
@@ -144,8 +146,10 @@ int main(int argc, char* argv[]) {
 		auto bstDuration = std::chrono::duration_cast<std::chrono::milliseconds>(bstEnd-bstStart);
 		auto ttDuration = std::chrono::duration_cast<std::chrono::milliseconds>(ttEnd-ttStart);
 
-		std::cout << "BST Time to search each item in the table: " << bstDuration.count() << " ms\n";
-		std::cout << "Two-Three Time to search each item in the table: " << ttDuration.count() << " ms\n";
+		std::cout << std::setw(40) << std::left;
+		std::cout << "Total time taken by BST: " << bstDuration.count() << " ms\n";
+		std::cout << std::setw(40) << std::left;
+		std::cout << "Total time taken by 2-3 Tree: " << ttDuration.count() << " ms\n";
 
 	}
 	else {
