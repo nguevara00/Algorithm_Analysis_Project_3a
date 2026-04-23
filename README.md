@@ -1,8 +1,10 @@
 # Project 03a: 2-3 Tree Index
 William Dappen
+
 Nick Guevara
 
 CS 415 - Gill
+
 4/22/2026
 
 Goals of the project
