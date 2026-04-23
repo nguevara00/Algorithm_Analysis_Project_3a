@@ -141,11 +141,11 @@ int main(int argc, char* argv[]) {
 		}
 		auto ttEnd = std::chrono::high_resolution_clock::now();
 
-		auto bstDuration = std::chrono::duration_cast<std::chrono::microseconds>(bstEnd-bstStart);
-		auto ttDuration = std::chrono::duration_cast<std::chrono::microseconds>(ttEnd-ttStart);
+		auto bstDuration = std::chrono::duration_cast<std::chrono::milliseconds>(bstEnd-bstStart);
+		auto ttDuration = std::chrono::duration_cast<std::chrono::milliseconds>(ttEnd-ttStart);
 
-		std::cout << "BST Time to search each item in the table: " << bstDuration.count() << " microseconds\n";
-		std::cout << "Two-Three Time to search each item in the table: " << ttDuration.count() << " microseconds\n";
+		std::cout << "BST Time to search each item in the table: " << bstDuration.count() << " ms\n";
+		std::cout << "Two-Three Time to search each item in the table: " << ttDuration.count() << " ms\n";
 
 	}
 	else {
