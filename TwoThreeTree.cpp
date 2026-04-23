@@ -153,7 +153,7 @@ void TwoThreeTree::destroy(node* t) {
 
 	destroy(t->left);
 	destroy(t->middle);
-	destory(t->right);
+	destroy(t->right);
 	delete t;
 }
 
