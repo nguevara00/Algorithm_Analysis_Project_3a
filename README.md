@@ -18,5 +18,5 @@ Goals of the project
 
 ```bash
 make
-./index input_file
+./index <input_file>
 ```
