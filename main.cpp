@@ -11,10 +11,11 @@
 
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
-	    cout << "Incorrect input. Correct format: ./<exectuable.out> <inputtext.txt>\n";
+	    std::cout << "Incorrect input. Correct format: ./<exectuable.out> <inputtext.txt>\n";
 	    return 1;
 	}
-	string inputFileName = argv[1];
+
+	std::string inputFileName = argv[1];
 	char treeChoice;
 
 	std::cout << "Options: (a) BST, (b) 2-3 Tree, (c) Compare BST and 2-3 Tree\n";
@@ -39,19 +40,26 @@ int main(int argc, char* argv[]) {
 			std::cin >> choice;
 
 			if (choice == 1) {
-				myTree.printTree(cout);
+				myTree.printTree(std::cout);
 			}
 
 			else if (choice == 2) {
 				myTree.contains();
 			}
 			else if (choice == 3) {
-				string outputFile;
+				std::string outputFile;
 				std::cout << "Enter a filename to save your index to : ";
 				std::cin >> outputFile;
 				std::ofstream output(outputFile.c_str());
-				output.close();
-				std::cout << "Saved\n";
+
+				if (!output.is_open()) {
+					std::cout << "Could not open file.\n";
+				}
+				else {
+					myTree.printTree(output);
+					output.close();
+					std::cout << "Saved\n";
+				}
 			}
 			else {
 				break;
@@ -65,6 +73,7 @@ int main(int argc, char* argv[]) {
 
 		if (!input.is_open()) {
 			std::cout << "Invalid File Name. Restart Program.\n";
+			return 2;
 		}
 
 		myTree.buildTree(input);
@@ -76,7 +85,7 @@ int main(int argc, char* argv[]) {
 			std::cin >> choice;
 
 			if (choice == 1) {
-				myTree.printTree(cout);
+				myTree.printTree(std::cout);
 			}
 
 			else if (choice == 2) {
@@ -84,13 +93,18 @@ int main(int argc, char* argv[]) {
 			}
 
 			else if (choice == 3) {
-				string outputFile;
+				std::string outputFile;
 				std::cout << "Enter a filename to save your index to : ";
 				std::cin >> outputFile;
 				std::ofstream output(outputFile.c_str());
-				myTree.printTree(output);
-				output.close();
-				std::cout << "Saved\n";
+				if (!output.is_open()) {
+					std::cout << "Could not open file.\n";
+				}
+				else {
+					myTree.printTree(output);
+					output.close();
+					std::cout << "Saved\n";
+				}
 			}
 			else {
 				break;
@@ -102,37 +116,36 @@ int main(int argc, char* argv[]) {
         std::ifstream ttInput(inputFileName.c_str());
         BST bstTree;
         TwoThreeTree ttTree;
-        int choice = 0;
 
-        if (!bstInput.is_open()) {
+        if (!bstInput.is_open() || !ttInput.is_open()) {
             std::cout << "Invalid File Name. Restart Program.\n";
             return 2;
         }
 
         bstTree.buildTree(bstInput);
         ttTree.buildTree(ttInput);
-        ttInput.close();
         bstInput.close();
+		ttInput.close();
 
 		auto wordsSet = bstTree.dumpTree();
 
 		auto bstStart = std::chrono::high_resolution_clock::now();
-		for(string word : wordsSet){
+		for(const std::string& word : wordsSet){
 			bstTree.contains(word);
 		}
 		auto bstEnd = std::chrono::high_resolution_clock::now();
 
 		auto ttStart = std::chrono::high_resolution_clock::now();
-		for(string word : wordsSet){
+		for(const std::string& word : wordsSet){
 			ttTree.contains(word);
 		}
 		auto ttEnd = std::chrono::high_resolution_clock::now();
 
-		auto bstDuration = bstEnd-bstStart;
-		auto ttDuration = ttEnd-ttStart;
+		auto bstDuration = std::chrono::duration_cast<std::chrono::microseconds>(bstEnd-bstStart);
+		auto ttDuration = std::chrono::duration_cast<std::chrono::microseconds>(ttEnd-ttStart);
 
-		std::cout << "BST Time to search each item in the table: " << bstDuration.count() << std::endl;
-		std::cout << "Two-Three Time to search each item in the table: " << ttDuration.count() << std::endl;
+		std::cout << "BST Time to search each item in the table: " << bstDuration.count() << " microseconds\n";
+		std::cout << "Two-Three Time to search each item in the table: " << ttDuration.count() << " microseconds\n";
 
 	}
 	else {

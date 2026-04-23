@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <set>
 
 
 class TwoThreeTree{
@@ -22,6 +23,7 @@ class TwoThreeTree{
         bool isEmpty() const;
         void printTree(std::ostream & out = std::cout) const;
         void buildTree(std::ifstream & input);
+		std::set<std::string> dumpTree() const;
 
     private:
 
@@ -61,11 +63,12 @@ class TwoThreeTree{
 	};
 
 	void destroy(node* t);
-	InsertResult insertHelper(const std::string& word, int line, node*& t);
+	InsertResult insertHelper(const std::string& word, int line, node*& t, int& distWords);
 	bool containsHelper(const std::string& word, node* t, node*& result) const;
 	void printTreeHelper(node* t, std::ostream& out) const;
 	int findHeight(node* t) const;
 	bool isLeaf(node* t) const;
+	void dumpTreeHelper(node* t, std::set<std::string>& out) const;
 };
 	
 #endif	

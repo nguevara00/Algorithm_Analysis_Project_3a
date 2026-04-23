@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include <cctype>
+#include <set>
 
 //Constructor
 TwoThreeTree::TwoThreeTree(){
@@ -49,17 +50,7 @@ void TwoThreeTree::contains() const{
 
 void TwoThreeTree::contains(std::string input) const {
 	node* foundNode = nullptr;
-
-	if(containsHelper(input, root, foundNode)){
-		const Key* foundKey = nullptr;
-
-		if (foundNode->first.word == input) {
-			foundKey = &(foundNode->first);
-		}
-		else {
-			foundKey = &(foundNode->second);
-		}
-	}
+	containsHelper(input, root, foundNode);
 }
 
 //Returns true if there are no nodes in the tree
@@ -103,14 +94,7 @@ void TwoThreeTree::buildTree(std::ifstream & input){
 			}   
 			
             if (tempWord.length() > 0) {
-				node* foundNode = nullptr;
-				bool existed = containsHelper(tempWord, root, foundNode);
-
-				InsertResult result = insertHelper(tempWord, line, root);
-
-				if (!existed){
-					distWords++;
-				}
+				InsertResult result = insertHelper(tempWord, line, root, distWords);
 
 				if (result.split){
 					node* newRoot = new node(result.promotedKey);
@@ -146,6 +130,12 @@ void TwoThreeTree::buildTree(std::ifstream & input){
 	std::cout <<"Height of 2-3 Tree is : " << treeHeight << std::endl;
 }
 
+std::set<std::string> TwoThreeTree::dumpTree() const {
+	std::set<std::string> out;
+	dumpTreeHelper(root, out);
+	return out;
+}
+
 void TwoThreeTree::destroy(node* t) {
 	if (t == nullptr){
 		return;
@@ -161,13 +151,14 @@ void TwoThreeTree::destroy(node* t) {
 //the word was found at, node is the node of the tree being
 //examined, and distWord is incremented if a new word is created
 //and used by buildTree
-TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, int line, node*& t){
+TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, int line, node*& t, int& distWords){
     InsertResult result(false);
 
 	//empty subtree: create new node here
 	if(t == nullptr){
 	    Key newKey(word,line);
 		t = new node(newKey);
+		distWords++;
 	    return result;
     }
 
@@ -198,6 +189,7 @@ TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, i
 			}
 
 			t->keyCount = 2;
+			distWords++;
 			return result;
 		}
 
@@ -224,12 +216,14 @@ TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, i
 		}
 
 		t->first = small;
+		t->second = Key();
 		t->keyCount = 1;
 
 		node* newRight = new node(large);
 		result.split = true;
 		result.promotedKey = middle;
 		result.rightChild = newRight;
+		distWords++;
 		return result;
 	}
 
@@ -237,7 +231,7 @@ TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, i
 	if (t->keyCount == 1) {
 		//recurse left
 		if (word < t->first.word){
-			InsertResult childResult = insertHelper(word,line, t->left);
+			InsertResult childResult = insertHelper(word,line, t->left, distWords);
 
 			if (!childResult.split){
 				return result;
@@ -253,7 +247,7 @@ TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, i
 		}
 		// recurse right
 		else {
-			InsertResult childResult = insertHelper(word, line, t->right);
+			InsertResult childResult = insertHelper(word, line, t->right, distWords);
 			if (!childResult.split) {
 				return result;
 			}
@@ -269,7 +263,7 @@ TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, i
 	else {
 		// 2 key parent, recurse left/middle/right
 		if (word < t->first.word){
-			InsertResult childResult = insertHelper(word,line,t->left);
+			InsertResult childResult = insertHelper(word,line,t->left, distWords);
 
 			if (!childResult.split){
 				return result;
@@ -294,7 +288,7 @@ TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, i
 			return result;
 		}
 		else if (word > t->second.word) {
-			InsertResult childResult = insertHelper(word,line,t->right);
+			InsertResult childResult = insertHelper(word,line,t->right, distWords);
 
 			if (!childResult.split){
 				return result;
@@ -317,7 +311,7 @@ TwoThreeTree::InsertResult TwoThreeTree::insertHelper(const std::string& word, i
 			return result;
 		}
 		else {
-			InsertResult childResult = insertHelper(word,line,t->middle);
+			InsertResult childResult = insertHelper(word,line,t->middle, distWords);
 
 			if (!childResult.split){
 				return result;
@@ -465,3 +459,21 @@ bool TwoThreeTree::isLeaf(node* t) const {
 	return t != nullptr && t->left == nullptr && t->middle == nullptr && t->right == nullptr;
 }
 
+void TwoThreeTree::dumpTreeHelper(node* t, std::set<std::string>& out) const {
+	if (t == nullptr){
+		return;
+	}
+
+	if (t->keyCount == 1) {
+		dumpTreeHelper(t->left, out);
+		out.insert(t->first.word);
+		dumpTreeHelper(t->right, out);
+	}
+	else {
+		dumpTreeHelper(t->left, out);
+		out.insert(t->first.word);
+		dumpTreeHelper(t->middle, out);
+		out.insert(t->second.word);
+		dumpTreeHelper(t->right, out);
+	}
+}

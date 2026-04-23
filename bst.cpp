@@ -57,7 +57,7 @@ void BST::buildTree(ifstream & input){
 		getline(input, tempLine);
 		for (int i = 0; i < tempLine.length(); i++) {
 		    //Insert valid chars into tempWord until a delimiter( newline or space) is found
-		    while (tempLine[i] != ' '&& tempLine[i] != '\n' && i < tempLine.length() ) {
+		    while (i < tempLine.length() && tempLine[i] != ' ' && tempLine[i] != '\n') {
 			tempWord.insert(tempWord.end(), tempLine[i]);
 			i++;
 		    }
